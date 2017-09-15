@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.feng.dao.LoginTokenDao">
+
+    <insert id="addLoginToken">
+        insert into login_token (user_id,token,expired,status)
+        values (#{userId},#{token},#{expired},#{status})
+    </insert>
+
+    <select id="selectLoginTokenByToken" resultType="com.feng.model.LoginToken">
+        select user_id,token,expired,status
+        from login_token
+        where token=#{token}
+    </select>
+
+    <update id="updateStatus">
+        update login_token set status=#{status} where user_id=#{userId}
+    </update>
+
+</mapper>
