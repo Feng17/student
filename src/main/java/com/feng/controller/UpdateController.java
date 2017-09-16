@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +24,12 @@ public class UpdateController {
 
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(Student student) {   //接收Student对象作为参数，对象中的属性将会使用请求中同名的参数进行填充
-        updateService.addStudent(student);
+    public String add(Model model, String name, String gender, Integer age, String number, String tel, MultipartFile file) throws IOException {
+        if (file.getSize() > 3 * 1024 * 1024) {
+            model.addAttribute("msg", "图片不能大于3M");
+            return "error";
+        }
+        updateService.addStudent(name, gender, age, number, tel, file);
         return "redirect:/main";
     }
 
@@ -45,8 +51,12 @@ public class UpdateController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String update(Student student) {
-        updateService.updateStudent(student);
+    public String update(Model model, Integer id, String name, String gender, Integer age, String number, String tel, MultipartFile file) throws IOException {
+        if (file.getSize() > 3 * 1024 * 1024) {
+            model.addAttribute("msg", "图片不能大于3M");
+            return "error";
+        }
+        updateService.updateStudent(id, name, gender, age, number, tel, file);
         return "redirect:/main";
     }
 
@@ -62,7 +72,7 @@ public class UpdateController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String search(Model model, Student student) {
+    public String search(Model model, Student student) {   //接收Student对象作为参数，对象中的属性将会使用请求中同名的参数进行填充
         List<Student> searchList = updateService.findStudent(student);
         model.addAttribute("searchList", searchList);
         return "searchStudent";

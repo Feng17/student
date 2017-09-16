@@ -12,6 +12,11 @@
 <br>
 <div class="container">
     <h1>详情</h1>
+    <div  class="col-md-12 column">
+        <img src="/image?name=${student.image}" height="200">
+        <br>
+        <br>
+    </div>
     <div class="col-md-12 column">
         <table class="table table-bordered">
             <thead>

@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 
@@ -35,6 +39,23 @@ public class HomeController {
         }
         model.addAttribute("student", map.get("student"));
         return "studentDetail";
+    }
+
+    @RequestMapping(value = "/image", method = RequestMethod.GET)   //展示图片
+    public void getImage(@RequestParam("name") String imageName, HttpServletResponse response) throws IOException {
+        String path = "E:/image/";
+        response.setContentType("image/jpeg");
+        response.setCharacterEncoding("UTF-8");
+        FileInputStream in = new FileInputStream(path + imageName);
+        int i = in.available();
+        byte[] data = new byte[i];
+        in.read(data);
+        in.close();
+
+        OutputStream out = response.getOutputStream();
+        out.write(data);
+        out.flush();
+        out.close();
     }
 
     @RequestMapping(value = "/addStudent", method = RequestMethod.GET)
