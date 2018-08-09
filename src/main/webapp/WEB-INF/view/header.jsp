@@ -14,12 +14,6 @@
             <li>
                 <a href="/addStudent">新增学生信息</a>
             </li>
-            <li>
-                <a href="/deletePage">删除学生信息</a>
-            </li>
-            <li>
-                <a href="/updatePage">修改学生信息</a>
-            </li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">

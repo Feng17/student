@@ -11,23 +11,17 @@
 </head>
 <body>
 <div class="page-header">
-    <c:if test="${not empty msg}">
-        <h2> &nbsp; &nbsp; &nbsp; &nbsp; ${msg} </h2>
-    </c:if>
-
-    <c:if test="${empty msg}">
-        <h2> &nbsp; &nbsp; &nbsp; &nbsp;欢迎</h2>
-        <h4> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 您要访问的页面需要登录，登录后会跳转到您需要访问的页面。</h4>
-    </c:if>
+    <h2> &nbsp; &nbsp; &nbsp; &nbsp;欢迎</h2>
+    <h4> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 您要访问的页面需要登录，登录后会跳转到您需要访问的页面。</h4>
 </div>
 <div class="container">
-    <form class="well form-horizontal" action="/signin" method="post">
+    <form class="well form-horizontal" >
         <fieldset>
             <legend>用户登录</legend>
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="loginName">登录名：</label>
+                <label class="col-sm-2 control-label" for="loginUsername">登录名：</label>
                 <div class="col-sm-4">
-                    <input id="loginName" type="text" name="username"  class="form-control" placeholder="请填写用户名" required >
+                    <input id="loginUsername" type="text" name="username"  class="form-control" placeholder="请填写用户名" required >
                 </div>
             </div>
 
@@ -37,9 +31,10 @@
                     <input id="loginPassword" type="password" name="password" class="form-control" placeholder="请填写密码" required >
                 </div>
             </div>
+            <span id="loginError" style="color:red;font-weight:bold"></span>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-4">
-                    <button class="btn btn-primary btn-block" type="submit">登陆</button>
+                    <button id="loginButton" class="btn btn-primary btn-block" type="button">登陆</button>
                     <button class="btn btn-default btn-block" type="reset">重置</button>
                 </div>
             </div>
@@ -63,23 +58,24 @@
                 <h4 class="modal-title" id="myModalLabel">用户注册</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" action="/register" method="post">
+                <form class="form-horizontal">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">用户名：</label>
                         <div class="col-sm-8">
-                            <input class="form-control" type="text" pattern="\w+" maxlength=10 name="username" placeholder="请填写用户名 字母,数字或下划线 最多10位" required  >
+                            <input class="form-control" id="registerUsername" type="text" pattern="\w+" maxlength=10 name="username" placeholder="请填写用户名 字母,数字或下划线 最多10位" required  >
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">密码：</label>
                         <div class="col-sm-8">
-                            <input class="form-control"  type="password"  minlength=5 name="password" placeholder="请填写密码 最少5位" required >
+                            <input class="form-control" id="registerPassword" type="password"  minlength=5 name="password" placeholder="请填写密码 最少5位" required >
                         </div>
                     </div>
+                    <span id="registerError" style="color:red;font-weight:bold"></span>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
-                            <input class="btn btn-primary btn-block" type="submit" value="注册" >
-                            <input class="btn btn-default btn-block" type="reset" value="重置" >
+                            <button id="registerButton" class="btn btn-primary btn-block" type="button">注册</button>
+                            <button class="btn btn-default btn-block" type="reset">重置</button>
                         </div>
                     </div>
                 </form>
@@ -87,5 +83,38 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(function () {
+        $("#registerButton").click(function () {
+            $.ajax({
+                url: "/register",
+                type: "post",
+                data: {username: $("#registerUsername").val(), password: $("#registerPassword").val()},
+                success: function (result) {
+                    if (result.msg) {
+                        $("#registerError").text(result.msg);
+                    } else {
+                        alert("注册成功");
+                        $("#myModal").modal("hide");
+                    }
+                }
+            });
+        });
+        $("#loginButton").click(function () {
+            $.ajax({
+                url: "/signin",
+                type: "post",
+                data: {username: $("#loginUsername").val(), password: $("#loginPassword").val()},
+                success: function (result) {
+                    if (result.msg) {
+                        $("#loginError").text(result.msg);
+                    } else {
+                        window.location.href = "/main";
+                    }
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

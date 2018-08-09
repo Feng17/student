@@ -5,11 +5,10 @@ import com.feng.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -24,30 +23,17 @@ public class LoginController {
     HostHolder hostHolder;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(Model model, String username, String password) {
+    @ResponseBody
+    public Map<String, Object> register(String username, String password) {
         Map<String, Object> map = loginService.register(username, password);
-        model.addAttribute("msg", map.get("msg"));
-        return "login";
+        return map;
     }
 
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
-    public String signin(Model model, String username, String password,
-                         @CookieValue(value = "token", defaultValue = "") String token,
-                         HttpServletResponse response) {
-        if (!token.isEmpty() && loginService.isOnline(token)) {
-            model.addAttribute("msg", "你已经登录");
-            return "error";
-        }
-        Map<String, Object> map = loginService.login(username, password);
-        if (map.containsKey("token")) {
-            Cookie cookie = new Cookie("token", map.get("token").toString());
-            cookie.setPath("/");
-            response.addCookie(cookie);
-            return "redirect:/main";
-        } else {
-            model.addAttribute("msg", map.get("msg"));
-            return "login";
-        }
+    @ResponseBody
+    public Map<String, Object> signin(Model model, String username, String password, HttpServletResponse response) {
+        Map<String, Object> map = loginService.login(username, password, response);
+        return map;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)

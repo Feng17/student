@@ -37,7 +37,7 @@
 				<th>操作</th>
 			</tr>
 			 <c:forEach items="${searchList}" var="search">
-			<tr>
+			<tr id="tr_${search.id}">
 				<td>${search.id}</td>
 				<td>${search.name}</td>
 				<td>${search.gender}</td>
@@ -62,7 +62,7 @@
 								 <h4 class="alert alert-warning" role="alert">
 									 <span class="label label-warning">Warning</span>&nbsp;确定要删除&nbsp;${search.name}&nbsp;吗
 								 </h4>
-								 <a class="btn btn-danger" href="/deleteStudent?id=${search.id}">是</a>
+								 <a class="btn btn-danger" onclick="deleteStudent(${search.id})">是</a>
 								 <a class="btn btn-primary" data-dismiss="modal" >否</a>
 							 </div>
 						 </div>
@@ -71,5 +71,20 @@
 			 </c:forEach>
 		</table>
 	</div>
+<script type="text/javascript">
+	function deleteStudent(id) {
+		$.ajax({
+			type: "get",
+			url: "/deleteStudent",
+			data: {"id": id},
+			success: function (result) {
+				if (result.msg == "ok") {
+					$("#tr_" + id).remove();
+					$("#" + id).modal("hide");
+				}
+			}
+		});
+	}
+</script>
 </body>
 </html>

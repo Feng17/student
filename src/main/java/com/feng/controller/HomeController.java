@@ -63,15 +63,6 @@ public class HomeController {
         return "addStudent";
     }
 
-    @RequestMapping(value = "/updatePage", method = RequestMethod.GET)
-    public String updatePage() {
-        return "updatePage";
-    }
-
-    @RequestMapping(value = "/deletePage", method = RequestMethod.GET)
-    public String deletePage() {
-        return "deletePage";
-    }
 
     @RequestMapping(value = "/searchStudent", method = RequestMethod.GET)
     public String searchStudent() {

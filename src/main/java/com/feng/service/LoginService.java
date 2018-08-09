@@ -5,9 +5,12 @@ import com.feng.dao.UserDao;
 import com.feng.model.LoginToken;
 import com.feng.model.User;
 import com.feng.util.MD5Util;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +25,10 @@ public class LoginService {
 
     public Map<String, Object> register(String username, String password) {
         Map<String, Object> map = new HashMap<String, Object>();
+        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+            map.put("msg", "用户名和密码不能为空");
+            return map;
+        }
         User user = userDao.selectUserByName(username);
         if (user != null) {
             map.put("msg", "用户名已存在");
@@ -37,8 +44,12 @@ public class LoginService {
 
     }
 
-    public Map<String, Object> login(String username, String password) {
+    public Map<String, Object> login(String username, String password, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<String, Object>();
+        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+            map.put("msg", "用户名和密码不能为空");
+            return map;
+        }
         User user = userDao.selectUserByName(username);
         if (user == null) {
             map.put("msg", "用户名不存在");
@@ -51,7 +62,9 @@ public class LoginService {
 
         //登录成功 添加一个token
         String token = addLoginToken(user.getId());
-        map.put("token", token);
+        Cookie cookie = new Cookie("token", token);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return map;
     }
 
@@ -67,14 +80,6 @@ public class LoginService {
         return token.getToken();
     }
 
-    public boolean isOnline(String token) {
-        LoginToken loginToken = loginTokenDao.selectLoginTokenByToken(token);
-        if (loginToken != null && loginToken.getStatus() == 0 && loginToken.getExpired().after(new Date())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public void logout(Integer userId, Integer status) {
         loginTokenDao.updateStatus(userId, status);

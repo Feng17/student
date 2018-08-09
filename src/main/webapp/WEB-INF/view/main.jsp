@@ -24,7 +24,7 @@
 				<th>操作</th>
 			</tr>
 			 <c:forEach items="${pageBean.list}" var="student">
-			<tr>
+			<tr id="tr_${student.id}">
 				<td>${student.id}</td>
 				<td>${student.name}</td>
 				<td>${student.gender}</td>
@@ -50,7 +50,7 @@
                                  <h4 class="alert alert-warning" role="alert">
                                      <span class="label label-warning">Warning</span>&nbsp;确定要删除&nbsp;${student.name}&nbsp;吗
                                  </h4>
-                                 <a class="btn btn-danger" href="/deleteStudent?id=${student.id}">是</a>
+                                 <a class="btn btn-danger"  onclick="deleteStudent(${student.id})">是</a>
                                  <a class="btn btn-primary"data-dismiss="modal">否</a>
                              </div>
                          </div>
@@ -110,6 +110,19 @@
 	</div>
 
 <script type="text/javascript">
+    function deleteStudent(id) {
+        $.ajax({
+            type: "get",
+            url: "/deleteStudent",
+            data: {"id": id},
+            success: function (result) {
+                if (result.msg == "ok") {
+                    $("#tr_" + id).remove();
+                    $("#" + id).modal("hide");
+                }
+            }
+        });
+    }
     $(function(){
         var curPage = ${pageBean.curPage};
         $(".pageNum").each(function(){

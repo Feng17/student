@@ -9,9 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,18 +35,13 @@ public class UpdateController {
         return "redirect:/main";
     }
 
-    @RequestMapping(value = "/updateStudentById", method = RequestMethod.POST)
-    public String updateStudentById(Model model, Integer id) {
-        model.addAttribute("id", id);
-        return "redirect:/updateStudent/{id}";
-    }
 
     @RequestMapping(value = "/updateStudent/{studentId}", method = RequestMethod.GET)
     public String updateStudent(Model model, @PathVariable("studentId") Integer studentId) {
         Map<String, Object> map = studentService.selectStudentById(studentId);
         if (map.containsKey("msg")) {
             model.addAttribute("msg", map.get("msg"));
-            return "updatePage";
+            return "error";
         }
         model.addAttribute("student", map.get("student"));
         return "updateStudent";
@@ -60,15 +57,13 @@ public class UpdateController {
         return "redirect:/main";
     }
 
-    @RequestMapping(value = "/deleteStudent", method = {RequestMethod.GET, RequestMethod.POST})
-    public String deleteStudent(Model model, Integer id) {
-        Map<String, Object> map = studentService.selectStudentById(id);
-        if (map.containsKey("msg")) {
-            model.addAttribute("msg", map.get("msg"));
-            return "deletePage";
-        }
+    @RequestMapping(value = "/deleteStudent", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> deleteStudent(Integer id) {
+        Map<String, Object> map = new HashMap<>();
         updateService.deleteStudent(id);
-        return "redirect:/main";
+        map.put("msg", "ok");
+        return map;
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
