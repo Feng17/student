@@ -156,6 +156,13 @@
       <version>2.2</version>
     </dependency>
 
+    <!--邮件发送-->
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4.7</version>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>student</finalName>

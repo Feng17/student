@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,9 +25,16 @@ public class LoginController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> register(String username, String password) {
-        Map<String, Object> map = loginService.register(username, password);
+    public Map<String, Object> register(String username,String email, String password) {
+        Map<String, Object> map = loginService.register(username,email, password);
         return map;
+    }
+
+    @RequestMapping(value = "/activate",method = RequestMethod.GET)
+    public String activate(@RequestParam("code") String code, Model model) {
+        Map<String,Object> map =  loginService.activate(code);
+        model.addAttribute("msg", map.get("msg"));
+        return "login";
     }
 
     @RequestMapping(value = "/signin", method = RequestMethod.POST)

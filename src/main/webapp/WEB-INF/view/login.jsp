@@ -11,8 +11,13 @@
 </head>
 <body>
 <div class="page-header">
-    <h2> &nbsp; &nbsp; &nbsp; &nbsp;欢迎</h2>
-    <h4> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 您要访问的页面需要登录，登录后会跳转到您需要访问的页面。</h4>
+    <c:if test="${not empty msg}">
+        <h2 style="color:red"> &nbsp; &nbsp; &nbsp; &nbsp; ${msg} </h2>
+    </c:if>
+    <c:if test="${empty msg}">
+        <h2> &nbsp; &nbsp; &nbsp; &nbsp;欢迎</h2>
+        <h4> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 您要访问的页面需要登录，登录后会跳转到您需要访问的页面。</h4>
+    </c:if>
 </div>
 <div class="container">
     <form class="well form-horizontal" >
@@ -21,14 +26,14 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="loginUsername">登录名：</label>
                 <div class="col-sm-4">
-                    <input id="loginUsername" type="text" name="username"  class="form-control" placeholder="请填写用户名" required >
+                    <input id="loginUsername" type="text"  class="form-control" placeholder="请填写用户名" required >
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="loginPassword">密码：</label>
                 <div class="col-sm-4">
-                    <input id="loginPassword" type="password" name="password" class="form-control" placeholder="请填写密码" required >
+                    <input id="loginPassword" type="password"  class="form-control" placeholder="请填写密码" required >
                 </div>
             </div>
             <span id="loginError" style="color:red;font-weight:bold"></span>
@@ -52,7 +57,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button"  id="modalClose" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="myModalLabel">用户注册</h4>
@@ -66,9 +71,15 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label" for="loginUsername">邮箱：</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="registerEmail" type="text"   class="form-control" placeholder="请填写邮箱" required >
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">密码：</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="registerPassword" type="password"  minlength=5 name="password" placeholder="请填写密码 最少5位" required >
+                            <input class="form-control" id="registerPassword" type="password"  minlength=6 name="password" placeholder="请填写密码 最少6位" required >
                         </div>
                     </div>
                     <span id="registerError" style="color:red;font-weight:bold"></span>
@@ -89,13 +100,18 @@
             $.ajax({
                 url: "/register",
                 type: "post",
-                data: {username: $("#registerUsername").val(), password: $("#registerPassword").val()},
+                data: {username: $("#registerUsername").val(),email:$("#registerEmail").val(), password: $("#registerPassword").val()},
                 success: function (result) {
-                    if (result.msg) {
-                        $("#registerError").text(result.msg);
-                    } else {
-                        alert("注册成功");
+                    if (result.msg == "ok") {
+                        alert("激活邮件已发送，验证后就登录了")
                         $("#myModal").modal("hide");
+                        $("#registerUsername").val("");
+                        $("#registerEmail").val("");
+                        $("#registerPassword").val("");
+                        $("#registerError").text("");
+                    } else {
+                        $("#registerError").text(result.msg);
+
                     }
                 }
             });
@@ -114,6 +130,14 @@
                 }
             });
         });
+
+        $("#modalClose").click(function () {
+            $("#registerUsername").val("");
+            $("#registerEmail").val("");
+            $("#registerPassword").val("");
+            $("#registerError").text("");
+        });
+
     });
 </script>
 </body>

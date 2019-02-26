@@ -10,4 +10,11 @@ public interface UserDao {
 
     User selectUserById(Integer id);
 
+    void updateStateByCode(String code);
+
+    int selectEmailCount(String email);
+
+    int selectStateByUsername(String name);
+
+    User selectUserByCode(String code);
 }

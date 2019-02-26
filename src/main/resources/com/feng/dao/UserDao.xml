@@ -16,7 +16,23 @@
     </select>
 
     <insert id="addUser">
-        insert into user (name,password,salt)
-        values(#{name},#{password},#{salt})
+        insert into user (name,password,email,salt,code,state)
+        values(#{name},#{password},#{email},#{salt},#{code},#{state})
     </insert>
+
+    <update id="updateStateByCode">
+        update user set state = 1 where code = #{code}
+    </update>
+
+    <select id="selectEmailCount" resultType="int">
+        select count(*) from user where email = #{email}
+    </select>
+
+    <select id="selectStateByUsername" resultType="int">
+        select state from user where name = #{name}
+    </select>
+
+    <select id="selectUserByCode" resultType="com.feng.model.User">
+        select id,name,state from user where code = #{code}
+    </select>
 </mapper>

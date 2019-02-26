@@ -3,6 +3,10 @@ package com.feng.model;
 public class User {
     private Integer id;
     private String name;
+    private String email;
+    private String code;
+    private Integer state;
+    private Integer isActivated;
     private String password;
     private String salt;
 
@@ -21,6 +25,38 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Integer getIsActivated() {
+        return isActivated;
+    }
+
+    public void setIsActivated(Integer isActivated) {
+        this.isActivated = isActivated;
     }
 
     public String getPassword() {

@@ -26,7 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Autowired
     HostHolder hostHolder;
 
-    private static final String[] IGNORE_URI = {"/login", "/signin", "/register"};
+    private static final String[] IGNORE_URI = {"/login", "/signin", "/register","/activate"};
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handle) throws Exception {
